@@ -252,7 +252,7 @@ const RequestDetail = () => {
                             ? 'bg-purple-500/10 border-purple-500/25 text-purple-400'
                             : 'bg-amber-500/10 border-amber-500/25 text-amber-400'
                         }`}>
-                          {classification.provider === 'gemini' ? 'Gemini 1.5 Flash' :
+                          {classification.provider === 'gemini' ? 'Gemini 3.5 Flash' :
                            classification.provider === 'claude' ? 'Claude 3.5 Sonnet' : 'Mock Fallback'}
                         </span>
                       </span>
