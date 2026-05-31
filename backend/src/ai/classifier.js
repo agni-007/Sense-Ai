@@ -27,7 +27,7 @@ export const classifyRequest = async (message, sourceChannel = 'API') => {
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-latest',
       max_tokens: 500,
       system: `You are a customer request classifier. Analyze customer messages and return ONLY valid JSON with this exact shape:
 {"category":"support|sales|urgent|spam|other","priority":"LOW|MEDIUM|HIGH","summary":"one sentence internal summary","confidence":0.0-1.0,"reason":"brief reason for classification"}
