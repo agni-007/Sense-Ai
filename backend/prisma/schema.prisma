@@ -1,0 +1,120 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         Role      @default(AGENT)
+  createdAt    DateTime  @default(now())
+  notes        InternalNote[]
+  events       RequestEvent[]
+}
+
+enum Role {
+  ADMIN
+  AGENT
+}
+
+model CustomerRequest {
+  id               String    @id @default(cuid())
+  idempotencyKey   String?   @unique   // bonus: prevent duplicates
+  customerName     String
+  customerEmail    String?
+  customerPhone    String?
+  message          String    @db.Text
+  sourceChannel    Channel   @default(API)
+  status           Status    @default(NEW)
+  categorySnapshot String?   // copied from AI output for quick filter
+  prioritySnapshot Priority? // copied from AI output for quick filter
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  classifications  AIClassification[]
+  events           RequestEvent[]
+  notes            InternalNote[]
+  
+  @@index([status])
+  @@index([prioritySnapshot])
+  @@index([categorySnapshot])
+  @@index([createdAt])
+}
+
+enum Channel {
+  API
+  WEBHOOK_WHATSAPP
+  WEBHOOK_EMAIL
+  WEBSITE_FORM
+}
+
+enum Status {
+  NEW
+  QUEUED
+  CLASSIFYING
+  CLASSIFIED
+  IN_PROGRESS
+  RESOLVED
+  SPAM
+  FAILED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model AIClassification {
+  id         String   @id @default(cuid())
+  requestId  String
+  provider   String   @default("claude")
+  category   String?  // sales | support | urgent | spam | other
+  priority   Priority?
+  summary    String?  @db.Text
+  confidence Float?
+  reason     String?  @db.Text
+  rawOutput  Json?
+  errorState String?
+  retryCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  
+  request    CustomerRequest @relation(fields: [requestId], references: [id])
+  
+  @@index([requestId])
+}
+
+model RequestEvent {
+  id         String   @id @default(cuid())
+  requestId  String
+  eventType  String   // status_changed | note_added | classified | retry | created
+  oldValue   String?
+  newValue   String?
+  actorId    String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  
+  request    CustomerRequest @relation(fields: [requestId], references: [id])
+  actor      User?           @relation(fields: [actorId], references: [id])
+  
+  @@index([requestId])
+}
+
+model InternalNote {
+  id        String   @id @default(cuid())
+  requestId String
+  authorId  String
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+  
+  request   CustomerRequest @relation(fields: [requestId], references: [id])
+  author    User            @relation(fields: [authorId], references: [id])
+  
+  @@index([requestId])
+}
