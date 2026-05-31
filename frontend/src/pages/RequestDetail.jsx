@@ -246,11 +246,14 @@ const RequestDetail = () => {
                       <span className="text-dark-400 flex items-center gap-2">
                         AI Engine Confidence Score
                         <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold tracking-wider uppercase border ${
-                          classification.provider === 'claude'
+                          classification.provider === 'gemini'
+                            ? 'bg-blue-500/10 border-blue-500/25 text-blue-400'
+                            : classification.provider === 'claude'
                             ? 'bg-purple-500/10 border-purple-500/25 text-purple-400'
                             : 'bg-amber-500/10 border-amber-500/25 text-amber-400'
                         }`}>
-                          {classification.provider === 'claude' ? 'Claude 3.5 Sonnet' : 'Mock Fallback'}
+                          {classification.provider === 'gemini' ? 'Gemini 1.5 Flash' :
+                           classification.provider === 'claude' ? 'Claude 3.5 Sonnet' : 'Mock Fallback'}
                         </span>
                       </span>
                       <span className="text-brand-400 font-bold">{Math.round(classification.confidence * 100)}%</span>
