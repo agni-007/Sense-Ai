@@ -104,6 +104,12 @@ export const useSocket = () => {
       });
     });
 
+    // 5. requests:cleared — Handle Admin clearing all requests
+    socketInstance.on('requests:cleared', () => {
+      console.log('🔔 [Realtime] Pipeline Cleared by Admin');
+      queryClient.invalidateQueries({ queryKey: ['requests'] });
+    });
+
     setSocket(socketInstance);
 
     return () => {

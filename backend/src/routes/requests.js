@@ -386,6 +386,27 @@ router.post('/:id/retry-classification', async (req, res) => {
   } catch (error) {
     console.error('Retry classification error:', error);
     return res.status(500).json({ error: 'Failed to retry classification' });
+// DELETE /requests — Clear all customer requests, classifications, notes, and events (Admin Only)
+router.delete('/', async (req, res) => {
+  if (req.user.role !== 'ADMIN') {
+    return res.status(403).json({ error: 'Forbidden. Only administrators can clear the pipeline.' });
+  }
+
+  try {
+    await prisma.$transaction([
+      prisma.internalNote.deleteMany({}),
+      prisma.requestEvent.deleteMany({}),
+      prisma.aIClassification.deleteMany({}),
+      prisma.customerRequest.deleteMany({})
+    ]);
+
+    // Broadcast live to all connected WebSocket clients
+    emitToAll('requests:cleared', { clearedAt: new Date().toISOString() });
+
+    return res.status(200).json({ message: 'All customer requests cleared successfully' });
+  } catch (error) {
+    console.error('Clear all requests error:', error);
+    return res.status(500).json({ error: 'Failed to clear customer requests' });
   }
 });
 

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useRequests } from '../hooks/useRequests';
 import FilterBar from '../components/FilterBar';
 import RequestCard from '../components/RequestCard';
-import { Inbox, ChevronLeft, ChevronRight, Loader2, RefreshCw } from 'lucide-react';
+import { api } from '../lib/api';
+import { Inbox, ChevronLeft, ChevronRight, Loader2, RefreshCw, Trash2 } from 'lucide-react';
 
 const initialFilters = {
   status: 'ALL',
@@ -14,9 +15,33 @@ const initialFilters = {
 const RequestList = () => {
   const [filters, setFilters] = useState(initialFilters);
   const [page, setPage] = useState(1);
+  const [isClearing, setIsClearing] = useState(false);
+
+  // Parse User details
+  const userString = localStorage.getItem('user');
+  const user = userString ? JSON.parse(userString) : { role: 'AGENT' };
 
   // Fetch paginated requests with filters
   const { data, isLoading, error, refetch, isFetching } = useRequests(filters, page);
+
+  const handleClearPipeline = async () => {
+    const confirmed = window.confirm(
+      '🚨 WARNING: Are you absolutely sure you want to permanently delete ALL customer requests, internal notes, AI classifications, and timeline events in the pipeline?\n\nThis action cannot be undone!'
+    );
+    if (!confirmed) return;
+
+    setIsClearing(true);
+    try {
+      await api.delete('/requests');
+      console.log('🗑️ Request pipeline cleared successfully.');
+      refetch();
+    } catch (err) {
+      console.error('Failed to clear pipeline:', err);
+      alert(err.response?.data?.error || 'Failed to clear the request pipeline.');
+    } finally {
+      setIsClearing(false);
+    }
+  };
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -52,15 +77,30 @@ const RequestList = () => {
           </p>
         </div>
 
-        {/* Sync refresh button */}
-        <button
-          onClick={() => refetch()}
-          disabled={isLoading || isFetching}
-          className="flex items-center gap-2 border border-dark-800 bg-dark-900 hover:bg-dark-800 text-dark-300 hover:text-white px-3.5 py-2 rounded-xl text-sm transition-colors disabled:opacity-50 select-none shrink-0"
-        >
-          <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
-          <span className="hidden sm:inline">Refresh Cache</span>
-        </button>
+        {/* Action buttons */}
+        <div className="flex items-center gap-3">
+          {/* Sync refresh button */}
+          <button
+            onClick={() => refetch()}
+            disabled={isLoading || isFetching}
+            className="flex items-center gap-2 border border-dark-800 bg-dark-900 hover:bg-dark-800 text-dark-300 hover:text-white px-3.5 py-2 rounded-xl text-sm transition-colors disabled:opacity-50 select-none shrink-0 hover:scale-[1.02] active:scale-[0.98] transition-all"
+          >
+            <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Refresh Cache</span>
+          </button>
+
+          {/* Admin-only Clear Pipeline button */}
+          {user.role === 'ADMIN' && (
+            <button
+              onClick={handleClearPipeline}
+              disabled={isLoading || isClearing}
+              className="flex items-center gap-2 border border-red-950 bg-red-950/25 hover:bg-red-950/45 text-red-400 hover:text-red-300 px-3.5 py-2 rounded-xl text-sm disabled:opacity-50 select-none shrink-0 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Clear Pipeline</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Filter and search controllers */}
