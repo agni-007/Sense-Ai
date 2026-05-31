@@ -1,5 +1,10 @@
 # Cognifyr AI Workflow Operations Pipeline
 
+> [!TIP]
+> **🚀 Live Production Portal:** [https://ai-workflow-seven-brown.vercel.app/](https://ai-workflow-seven-brown.vercel.app/)
+> *   **Administrator Account:** `admin@cognifyr.co` / `Admin123!`
+> *   **Agent Account:** `agent@cognifyr.co` / `Agent123!`
+
 Cognifyr AI is a mini AI-powered customer request routing and triage monorepo system. It instantly stores inbound customer requests from multiple channels (API, web forms, and WhatsApp webhooks), offloads heavy classification analysis to a background queue processed by Anthropic Claude Sonnet, and updates an elegant React operations dashboard in real-time using Socket.io.
 
 ---
