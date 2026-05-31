@@ -249,7 +249,7 @@ model InternalNote {
 #### POST /auth/login
 ```json
 // Request
-{ "email": "admin@cognifyr.co", "password": "password123" }
+{ "email": "admin@123.com", "password": "admin123" }
 
 // Response 200
 { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "user": { "id": "...", "email": "...", "name": "...", "role": "ADMIN" } }
@@ -553,7 +553,7 @@ VITE_SOCKET_URL="http://localhost:3001"
 ## 12. SEED DATA
 
 Create a seed script at `backend/prisma/seed.js`:
-- 1 admin user: `admin@cognifyr.co` / `Admin123!`
+- 1 admin user: `admin@123.com` / `admin123`
 - 1 agent user: `agent@cognifyr.co` / `Agent123!`
 - 10 sample customer requests with varied statuses and classifications
 

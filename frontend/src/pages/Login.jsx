@@ -96,7 +96,7 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@cognifyr.co"
+                placeholder="admin@123.com"
                 required
                 disabled={loading}
                 className="w-full bg-dark-900/50 border border-dark-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-dark-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 transition-all"

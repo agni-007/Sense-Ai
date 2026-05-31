@@ -2,7 +2,7 @@
 
 > [!TIP]
 > **🚀 Live Production Portal:** [https://ai-workflow-seven-brown.vercel.app/](https://ai-workflow-seven-brown.vercel.app/)
-> *   **Administrator Account:** `admin@cognifyr.co` / `Admin123!`
+> *   **Administrator Account:** `admin@123.com` / `admin123`
 > *   **Agent Account:** `agent@cognifyr.co` / `Agent123!`
 
 Cognifyr AI is a mini AI-powered customer request routing and triage monorepo system. It instantly stores inbound customer requests from multiple channels (API, web forms, and WhatsApp webhooks), offloads heavy classification analysis to a background queue processed by Anthropic Claude Sonnet, and updates an elegant React operations dashboard in real-time using Socket.io.
@@ -118,7 +118,7 @@ Populate the database with default agent accounts and 10 highly realistic custom
 ```bash
 npx prisma db seed
 ```
-* **Default Admin Account:** `admin@cognifyr.co` / `Admin123!`
+* **Default Admin Account:** `admin@123.com` / `admin123`
 * **Default Agent Account:** `agent@cognifyr.co` / `Agent123!`
 
 ### 6. Boot Up Monorepo Services

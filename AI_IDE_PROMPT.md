@@ -136,7 +136,7 @@ Work through these steps in order. Complete each fully before moving to the next
 
 ### STEP 13 — Seed Data
 - Create `prisma/seed.js`:
-  - Create admin user: email=`admin@cognifyr.co`, password=`Admin123!`, role=ADMIN
+  - Create admin user: email=`admin@123.com`, password=`admin123`, role=ADMIN
   - Create agent user: email=`agent@cognifyr.co`, password=`Agent123!`, role=AGENT
   - Create 10 sample requests with varied statuses, classifications, and notes
 - Add to package.json: `"prisma": { "seed": "node prisma/seed.js" }`

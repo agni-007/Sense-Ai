@@ -42,8 +42,8 @@ Log in to receive a JWT authentication token.
 * **Request Body:**
 ```json
 {
-  "email": "admin@cognifyr.co",
-  "password": "Admin123!"
+  "email": "admin@123.com",
+  "password": "admin123"
 }
 ```
 * **Success Response (200 OK):**
@@ -52,7 +52,7 @@ Log in to receive a JWT authentication token.
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "id": "clxyz456",
-    "email": "admin@cognifyr.co",
+    "email": "admin@123.com",
     "name": "Admin User",
     "role": "ADMIN",
     "createdAt": "2026-05-31T08:00:00.000Z"

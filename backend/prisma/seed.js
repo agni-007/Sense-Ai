@@ -17,13 +17,13 @@ async function main() {
 
   // 2. Hash passwords
   const saltRounds = 12;
-  const adminPasswordHash = await bcrypt.hash('Admin123!', saltRounds);
+  const adminPasswordHash = await bcrypt.hash('admin123', saltRounds);
   const agentPasswordHash = await bcrypt.hash('Agent123!', saltRounds);
 
   // 3. Create core Admin and Agent operator users
   const admin = await prisma.user.create({
     data: {
-      email: 'admin@cognifyr.co',
+      email: 'admin@123.com',
       passwordHash: adminPasswordHash,
       name: 'Admin User',
       role: 'ADMIN'
