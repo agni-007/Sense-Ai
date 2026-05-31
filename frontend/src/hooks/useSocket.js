@@ -72,7 +72,7 @@ export const useSocket = () => {
           priority: data.priority,
           summary: data.summary,
           createdAt: new Date().toISOString(),
-          provider: 'claude',
+          provider: data.provider || 'claude',
         };
 
         return {

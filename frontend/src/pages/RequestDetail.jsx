@@ -243,7 +243,16 @@ const RequestDetail = () => {
                 {classification.confidence && (
                   <div>
                     <div className="flex justify-between items-center text-xs font-semibold mb-1.5 select-none">
-                      <span className="text-dark-400">AI Engine Confidence Score</span>
+                      <span className="text-dark-400 flex items-center gap-2">
+                        AI Engine Confidence Score
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold tracking-wider uppercase border ${
+                          classification.provider === 'claude'
+                            ? 'bg-purple-500/10 border-purple-500/25 text-purple-400'
+                            : 'bg-amber-500/10 border-amber-500/25 text-amber-400'
+                        }`}>
+                          {classification.provider === 'claude' ? 'Claude 3.5 Sonnet' : 'Mock Fallback'}
+                        </span>
+                      </span>
                       <span className="text-brand-400 font-bold">{Math.round(classification.confidence * 100)}%</span>
                     </div>
                     <div className="w-full bg-dark-900 border border-dark-800 rounded-full h-2">

@@ -52,7 +52,7 @@ export const startWorker = () => {
         const aiClassification = await prisma.aIClassification.create({
           data: {
             requestId,
-            provider: process.env.CLAUDE_API_KEY ? 'claude' : 'mock',
+            provider: classification.provider || 'mock',
             category: classification.category,
             priority: classification.priority,
             summary: classification.summary,
@@ -89,7 +89,8 @@ export const startWorker = () => {
           status: 'CLASSIFIED',
           category: classification.category,
           priority: classification.priority,
-          summary: classification.summary
+          summary: classification.summary,
+          provider: classification.provider || 'mock'
         });
 
         console.log(`✅ [Worker] Successfully classified request ${requestId} as ${classification.category}/${classification.priority}`);
