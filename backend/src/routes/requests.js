@@ -386,6 +386,9 @@ router.post('/:id/retry-classification', async (req, res) => {
   } catch (error) {
     console.error('Retry classification error:', error);
     return res.status(500).json({ error: 'Failed to retry classification' });
+  }
+});
+
 // DELETE /requests — Clear all customer requests, classifications, notes, and events (Admin Only)
 router.delete('/', async (req, res) => {
   if (req.user.role !== 'ADMIN') {
