@@ -68,7 +68,7 @@ const Login = () => {
             <Cpu className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-dark-100 to-dark-300 bg-clip-text text-transparent">
-            Cognifyr AI
+            Sense AI
           </h1>
           <p className="text-dark-400 text-sm mt-1">Workflow Ops Center Portal</p>
         </div>

@@ -1,5 +1,5 @@
 # 🤖 AI IDE PROMPT — READ THIS FIRST
-## Project: Cognifyr AI Workflow Ops Backend
+## Project: Sense AI Workflow Ops Backend
 ### Instructions for Antigravity / AI-Driven IDE
 
 ---
@@ -16,7 +16,7 @@ You are building a production-quality full-stack web application from scratch.
 2. **Build in the exact order listed in Section 15 of SRS.md.** Do not skip ahead.
 3. **Ask for permission only before:** switching major technologies, changing the database schema after migration, adding paid services, or changing the deployment target.
 4. **Do NOT ask permission for:** file/folder creation, naming conventions, writing tests, adding comments, creating seed data, choosing variable names, adding helper functions, or any other minor code decision.
-5. **Use mock AI first.** Implement `mockClassifier.js` before touching the Claude API. The mock must return the same JSON shape as the real classifier.
+5. **Use mock AI first.** Implement `mockClassifier.js` before touching the Gemini API. The mock must return the same JSON shape as the real classifier.
 6. **Never commit secrets.** Always use `.env` files. Always add `.env` to `.gitignore`. Always create `.env.example` with placeholder values.
 7. **Push to GitHub** at the end of each major section (after auth, after queue, after frontend, after deployment). Repo: `https://github.com/agni-007/ai-workflow.git`
 
@@ -31,7 +31,7 @@ You are building a production-quality full-stack web application from scratch.
 | Queue | BullMQ + Upstash Redis |
 | Auth | JWT + bcrypt |
 | Realtime | Socket.io |
-| AI | Claude API (`claude-sonnet-4-20250514`) + mock fallback |
+| AI | Gemini API (`gemini-3.5-flash`) + mock fallback |
 | Validation | Zod |
 | Frontend | React 18 + Vite + Tailwind CSS |
 | State/Data | TanStack Query (React Query) |
@@ -56,7 +56,7 @@ Work through these steps in order. Complete each fully before moving to the next
 - Install: `jsonwebtoken bcrypt zod express-rate-limit`
 - Install: `bullmq ioredis`
 - Install: `socket.io`
-- Install: `@anthropic-ai/sdk`
+- Install: `@google/generative-ai`
 - Create `src/server.js` with Express app, CORS (allow frontend URL), JSON body parser, `/health` endpoint
 - Set up `prisma/schema.prisma` with EXACT schema from SRS.md Section 4
 - Create `src/lib/prisma.js` singleton
@@ -101,7 +101,7 @@ Work through these steps in order. Complete each fully before moving to the next
 - Create `src/workers/classificationWorker.js`:
   1. Pick up job with `requestId`
   2. Update request status → CLASSIFYING, emit `request:updated` socket event
-  3. Call `mockClassifier(request)` (or real Claude if key exists)
+  3. Call `mockClassifier(request)` (or real Gemini if key exists)
   4. Create `AIClassification` record in DB
   5. Update request: `status=CLASSIFIED`, `categorySnapshot`, `prioritySnapshot`
   6. Create `RequestEvent` record: `eventType='classified'`
@@ -114,11 +114,11 @@ Work through these steps in order. Complete each fully before moving to the next
 - Export `emitToAll(event, data)` helper
 - Use in worker and routes
 
-### STEP 10 — Real Claude AI Integration
+### STEP 10 — Real Gemini AI Integration
 - Create `src/ai/classifier.js`:
-  - Check if `CLAUDE_API_KEY` env var exists; if not, fall back to mockClassifier
-  - Call `anthropic.messages.create()` with the system prompt from SRS.md Section 6
-  - Parse JSON from response.content[0].text
+  - Check if `GEMINI_API_KEY` env var exists; if not, fall back to mockClassifier
+  - Call `model.generateContent()` with the system prompt from SRS.md Section 6
+  - Parse JSON from `response.response.text()`
   - Wrap in try/catch; on parse error fall back to mockClassifier
 
 ### STEP 11 — Webhook Endpoint
@@ -137,7 +137,7 @@ Work through these steps in order. Complete each fully before moving to the next
 ### STEP 13 — Seed Data
 - Create `prisma/seed.js`:
   - Create admin user: email=`admin@123.com`, password=`admin123`, role=ADMIN
-  - Create agent user: email=`agent@cognifyr.co`, password=`Agent123!`, role=AGENT
+  - Create agent user: email=`agent@senseai.co`, password=`Agent123!`, role=AGENT
   - Create 10 sample requests with varied statuses, classifications, and notes
 - Add to package.json: `"prisma": { "seed": "node prisma/seed.js" }`
 - Run: `npx prisma db seed`
@@ -257,7 +257,7 @@ Examples:
 - `feat(backend): add Express server and Prisma setup`
 - `feat(auth): implement JWT login and middleware`
 - `feat(queue): add BullMQ classification queue and worker`
-- `feat(ai): integrate Claude API with mock fallback`
+- `feat(ai): integrate Gemini API with mock fallback`
 - `feat(socket): add Socket.io realtime events`
 - `feat(frontend): add login page and request list dashboard`
 - `feat(frontend): add realtime Socket.io client`

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: cognifyr-workflow-backend
+    name: senseai-workflow-backend
     env: node
     plan: free
     buildCommand: npm install && npx prisma generate

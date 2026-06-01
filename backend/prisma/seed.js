@@ -32,7 +32,7 @@ async function main() {
 
   const agent = await prisma.user.create({
     data: {
-      email: 'agent@cognifyr.co',
+      email: 'agent@senseai.co',
       passwordHash: agentPasswordHash,
       name: 'Agent User',
       role: 'AGENT'

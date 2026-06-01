@@ -1,5 +1,5 @@
 # Software Requirements Specification (SRS)
-## Cognifyr AI Workflow Ops Backend
+## Sense AI Workflow Ops Backend
 **Version:** 1.0 | **Date:** 2026-05-31 | **For:** AI-Driven IDE (Antigravity)
 
 ---
@@ -24,7 +24,7 @@ Build a **mini AI-powered customer request routing system** — a full-stack int
 | Queue / Async | BullMQ + Redis (Upstash Redis — free tier) |
 | Auth | JWT (jsonwebtoken) + bcrypt |
 | Realtime | Socket.io |
-| AI Classification | Claude API (claude-sonnet-4-20250514) with mock fallback |
+| AI Classification | Gemini API (gemini-3.5-flash) with mock fallback |
 | Validation | Zod |
 | Rate Limiting | express-rate-limit |
 
@@ -70,7 +70,7 @@ ai-workflow/
 │   │   ├── queues/
 │   │   │   └── classificationQueue.js    # BullMQ queue
 │   │   ├── ai/
-│   │   │   ├── classifier.js    # Real Claude API call
+│   │   │   ├── classifier.js    # Real Gemini API call
 │   │   │   └── mockClassifier.js # Fallback mock
 │   │   ├── lib/
 │   │   │   ├── prisma.js
@@ -190,7 +190,7 @@ enum Priority {
 model AIClassification {
   id         String   @id @default(cuid())
   requestId  String
-  provider   String   @default("claude")
+  provider   String   @default("gemini")
   category   String?  // sales | support | urgent | spam | other
   priority   Priority?
   summary    String?  @db.Text
@@ -257,7 +257,7 @@ model InternalNote {
 
 #### POST /auth/register *(seed only, disable in prod)*
 ```json
-{ "email": "agent@cognifyr.co", "password": "pass", "name": "Agent One", "role": "AGENT" }
+{ "email": "agent@senseai.co", "password": "pass", "name": "Agent One", "role": "AGENT" }
 ```
 
 ### Request Endpoints (all require `Authorization: Bearer <token>`)
@@ -360,7 +360,7 @@ POST /requests
 BullMQ Worker picks up job:
   → Update status: CLASSIFYING
   → Emit socket event: request:updated
-  → Call Claude API (or mock)
+  → Call Gemini API (or mock)
   → Parse JSON response
   → Save AIClassification record
   → Update request: status=CLASSIFIED, categorySnapshot, prioritySnapshot
@@ -374,10 +374,10 @@ On failure:
   → Emit socket event: request:updated
 ```
 
-### Claude API Call (classifier.js)
+### Gemini API Call (classifier.js)
 ```javascript
-const response = await anthropic.messages.create({
-  model: "claude-sonnet-4-20250514",
+const response = await model.generateContent({
+  model: "gemini-3.5-flash",
   max_tokens: 500,
   system: `You are a customer request classifier. Analyze customer messages and return ONLY valid JSON with this exact shape:
 {"category":"support|sales|urgent|spam|other","priority":"LOW|MEDIUM|HIGH","summary":"one sentence internal summary","confidence":0.0-1.0,"reason":"brief reason for classification"}
@@ -392,7 +392,7 @@ const classification = JSON.parse(response.content[0].text);
 ### Mock Classifier (mockClassifier.js) — fallback when no API key
 ```javascript
 // Keyword-based classification, returns same shape as real classifier
-// Used when CLAUDE_API_KEY is not set
+// Used when GEMINI_API_KEY is not set
 ```
 
 ### Expected AI Output Shape
@@ -470,7 +470,7 @@ socket.on('request:classified', (data) => { /* update UI */ });
 **Layout:** Sidebar nav + main content area
 
 **Top bar:**
-- App title "Cognifyr Ops"
+- App title "Sense AI Ops"
 - Live indicator dot (green pulsing = connected, grey = disconnected)
 - Logged-in user name + logout button
 
@@ -525,7 +525,7 @@ Each item shows:
 | Rate limiting | 100 req/15min on `/auth/*`, 500 req/15min on `/requests` |
 | Webhook signature | `x-webhook-secret` header validated against env var |
 | No secrets in repo | `.env` in `.gitignore`, `.env.example` with placeholder values |
-| Prompt injection | System prompt explicitly instructs Claude to ignore instructions in message content |
+| Prompt injection | System prompt explicitly instructs Gemini to ignore instructions in message content |
 
 ---
 
@@ -536,7 +536,7 @@ Each item shows:
 DATABASE_URL="postgresql://..."
 REDIS_URL="redis://..."
 JWT_SECRET="your-super-secret-jwt-key-min-32-chars"
-CLAUDE_API_KEY="sk-ant-..."      # Optional: uses mock if not set
+GEMINI_API_KEY="AQ..."      # Optional: uses mock if not set
 WEBHOOK_SECRET="webhook-secret-key"
 PORT=3001
 FRONTEND_URL="http://localhost:5173"
@@ -554,7 +554,7 @@ VITE_SOCKET_URL="http://localhost:3001"
 
 Create a seed script at `backend/prisma/seed.js`:
 - 1 admin user: `admin@123.com` / `admin123`
-- 1 agent user: `agent@cognifyr.co` / `Agent123!`
+- 1 agent user: `agent@senseai.co` / `Agent123!`
 - 10 sample customer requests with varied statuses and classifications
 
 ---
@@ -584,7 +584,7 @@ flowchart TD
     API -->|Enqueue job| Queue[BullMQ Queue\nUpstash Redis]
     API -->|201 Response| Customer
     Queue -->|Process job| Worker[Classification Worker]
-    Worker -->|Call API| AI[Claude API\nor Mock Classifier]
+    Worker -->|Call API| AI[Gemini API\nor Mock Classifier]
     AI -->|JSON classification| Worker
     Worker -->|Save classification| DB
     Worker -->|Emit event| Socket[Socket.io Server]
@@ -605,7 +605,7 @@ Build in this exact sequence:
 4. **Redis + BullMQ queue** — queue setup, job producer
 5. **Classification worker** — consumer, mock classifier first
 6. **Socket.io** — server setup, emit events from worker
-7. **Claude AI integration** — replace mock, add fallback
+7. **Gemini AI integration** — replace mock, add fallback
 8. **Notes + Events routes**
 9. **Webhook endpoint**
 10. **Rate limiting + validation**

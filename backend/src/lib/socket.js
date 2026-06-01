@@ -26,7 +26,7 @@ export const initSocket = (httpServer) => {
     const cleanToken = token.startsWith('Bearer ') ? token.substring(7) : token;
 
     try {
-      const decoded = jwt.verify(cleanToken, process.env.JWT_SECRET || 'super-secret-cognifyr-jwt-token-signing-key');
+      const decoded = jwt.verify(cleanToken, process.env.JWT_SECRET || 'super-secret-senseai-jwt-token-signing-key');
       socket.user = decoded; // Store user details in socket session
       next();
     } catch (err) {

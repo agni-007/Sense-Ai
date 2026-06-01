@@ -216,7 +216,7 @@ const RequestDetail = () => {
                 <Loader2 className="w-8 h-8 text-brand-500 animate-spin mb-3" />
                 <p className="text-dark-400 text-sm">
                   {request.status === 'CLASSIFYING' 
-                    ? 'Claude is analyzing the customer intent now...' 
+                    ? 'Gemini is analyzing the customer intent now...' 
                     : 'Request queued in background scheduler. AI process starting soon.'}
                 </p>
               </div>

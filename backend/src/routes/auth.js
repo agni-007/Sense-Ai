@@ -43,7 +43,7 @@ router.post('/login', validateBody(loginSchema), async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email, name: user.name, role: user.role },
-      process.env.JWT_SECRET || 'super-secret-cognifyr-jwt-token-signing-key',
+      process.env.JWT_SECRET || 'super-secret-senseai-jwt-token-signing-key',
       { expiresIn: '24h' }
     );
 
@@ -77,7 +77,7 @@ router.post('/register', validateBody(registerSchema), async (req, res) => {
         }
         const token = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
         try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super-secret-cognifyr-jwt-token-signing-key');
+          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super-secret-senseai-jwt-token-signing-key');
           if (decoded.role !== 'ADMIN') {
             return res.status(403).json({ error: 'Only admins can register new users in production' });
           }

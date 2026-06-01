@@ -34,7 +34,7 @@ const Dashboard = () => {
               <Cpu className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-dark-300 bg-clip-text text-transparent group-hover:text-brand-400 transition-colors">
-              Cognifyr Ops
+              Sense AI Ops
             </span>
           </Link>
           <LiveIndicator connected={connected} />
@@ -78,7 +78,7 @@ const Dashboard = () => {
 
       {/* Subtle footer */}
       <footer className="py-6 text-center text-xs text-dark-600 border-t border-dark-950/40 relative z-10 select-none">
-        <span>© {new Date().getFullYear()} Cognifyr AI Workflow Operations System. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} Sense AI Workflow Operations System. All rights reserved.</span>
       </footer>
     </div>
   );

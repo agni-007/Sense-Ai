@@ -74,7 +74,7 @@ enum Priority {
 model AIClassification {
   id         String   @id @default(cuid())
   requestId  String
-  provider   String   @default("claude")
+  provider   String   @default("gemini")
   category   String?  // sales | support | urgent | spam | other
   priority   Priority?
   summary    String?  @db.Text

@@ -1,6 +1,6 @@
 # Backend REST API Specification
 
-This document provides detailed information on all authentication, customer requests, internal notes, and webhook endpoints available in the Cognifyr AI Backend.
+This document provides detailed information on all authentication, customer requests, internal notes, and webhook endpoints available in the Sense AI Backend.
 
 ---
 
@@ -17,7 +17,7 @@ Register a new system operator user (Admin or Agent).
 * **Request Body:**
 ```json
 {
-  "email": "agent@cognifyr.co",
+  "email": "agent@senseai.co",
   "password": "Password123!",
   "name": "Agent User",
   "role": "AGENT" // ADMIN or AGENT (Defaults to AGENT)
@@ -27,7 +27,7 @@ Register a new system operator user (Admin or Agent).
 ```json
 {
   "id": "clxyz123",
-  "email": "agent@cognifyr.co",
+  "email": "agent@senseai.co",
   "name": "Agent User",
   "role": "AGENT",
   "createdAt": "2026-05-31T08:00:00.000Z"

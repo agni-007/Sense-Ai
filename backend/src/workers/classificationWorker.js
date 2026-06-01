@@ -102,7 +102,7 @@ export const startWorker = () => {
           await prisma.aIClassification.create({
             data: {
               requestId,
-              provider: process.env.CLAUDE_API_KEY ? 'claude' : 'mock',
+              provider: process.env.GEMINI_API_KEY ? 'gemini' : 'mock',
               errorState: error.message || 'Unknown classification error',
               retryCount: job.attemptsMade
             }

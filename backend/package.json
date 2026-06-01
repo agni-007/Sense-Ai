@@ -1,7 +1,7 @@
 {
-  "name": "cognifyr-workflow-backend",
+  "name": "senseai-workflow-backend",
   "version": "1.0.0",
-  "description": "Backend engine for Cognifyr AI Workflow Ops",
+  "description": "Backend engine for Sense AI Workflow Ops",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
