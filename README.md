@@ -136,6 +136,42 @@ npm run dev
 ```
 *(The React application will launch at `http://localhost:5173`).*
 
+### 7. Try it out from the Terminal
+Once the services are booted up, you can instantly test the pipeline and trigger real-time AI classifications by submitting requests via `curl` from your terminal.
+
+#### Option A: Submit via Public Webhook Endpoint (No JWT token required, uses Webhook Secret)
+```bash
+curl -X POST http://localhost:3001/webhooks/inbound \
+  -H "Content-Type: application/json" \
+  -H "x-webhook-secret: webhook-secret-key-123" \
+  -d '{
+    "source": "whatsapp",
+    "from": "+919876543210",
+    "name": "Priya Sharma",
+    "message": "Hi, I need help with my billing order #1234"
+  }'
+```
+
+#### Option B: Authenticate and Submit via Secure API Endpoint
+First, retrieve your operator JWT access token:
+```bash
+curl -X POST http://localhost:3001/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@123.com", "password": "admin123"}'
+```
+Then, copy the `token` string from the JSON response and pass it in the authorization header:
+```bash
+curl -X POST http://localhost:3001/requests \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_JWT_TOKEN>" \
+  -d '{
+    "customerName": "John Doe",
+    "customerEmail": "john@example.com",
+    "message": "I was charged twice for my subscription this month. Please issue a refund.",
+    "sourceChannel": "WEBSITE_FORM"
+  }'
+```
+
 ---
 
 ## 🗄️ Database Schema & Indexing Explanation
